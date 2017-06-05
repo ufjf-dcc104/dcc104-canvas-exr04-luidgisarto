@@ -28,7 +28,7 @@
     il.inicializar();
     level.imageLib = il;
     level.inicializar();
-    level.inicializarPredios(4, base.x);
+    level.inicializarPredios();
     desenha();
 
     function desenha() {
@@ -46,7 +46,20 @@
             pontos += 5;
         }
 
+        level.atingiuPredio();
+        existePredios();
         reiniciaInimigos();
+    }
+
+    function existePredios() {
+        if(level.predios.length === 0){
+            level.inimigos = 0;
+            ctx.font = "30px Arial";
+            ctx.fillStyle = "white";
+            ctx.fillText("Game Over, você fez " + pontos + " pontos", canvas.width / 5, canvas.height / 2);
+            ctx.font = "20px Arial";
+            ctx.fillText("Aperte enter para reiniciar o jogo.", canvas.width / 5 + 20, canvas.height / 2 + 20);
+        }
     }
 
     function reiniciaInimigos() {
@@ -62,6 +75,8 @@
     function habilitarControles() {
         addEventListener("keydown", function (e) {
             switch (e.keyCode) {
+                case 13:
+                    break;
                 case 32:
                     level.atirar(base);
                     break;

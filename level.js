@@ -1,5 +1,6 @@
 function Level() {
-    this.inimigos = 15;
+    this.inimigos = Math.random() * 5;
+    this.totalPredios = 4;
     this.sprites = [];
     this.predios = [];
     this.tiros = [];
@@ -13,7 +14,7 @@ Level.prototype.inicializar = function () {
         // inimigo.angulo = 500;
         // inimigo.va = 80;       
         inimigo.vx = 0;
-        inimigo.vy = 100;
+        inimigo.vy = 500;
         inimigo.color = "red";
         inimigo.width = 100;
         inimigo.height = 70;
@@ -22,8 +23,8 @@ Level.prototype.inicializar = function () {
     }
 }
 
-Level.prototype.inicializarPredios = function (total, posicao) {
-    for (var i = 0; i < total; i++) {
+Level.prototype.inicializarPredios = function () {
+    for (var i = 0; i < this.totalPredios; i++) {
         var predio = new Sprite();
         predio.x = 50 + 200*i + 20;
         if(predio.x > 270){
@@ -84,15 +85,6 @@ Level.prototype.mover = function (dt) {
     }
 }
 
-
-Level.prototype.colidiuCom = function (alvo, resolveColisao) {
-    for (var i = 0; i < this.sprites.length; i++) {
-        if (this.sprites[i].colidiu(alvo)) {
-            resolveColisao(this.sprites[i], alvo);
-        }
-    }
-};
-
 Level.prototype.atingido = function () {
     for (var i = this.tiros.length - 1; i >= 0; i--) {
         var tiro = this.tiros[i];
@@ -109,4 +101,20 @@ Level.prototype.atingido = function () {
 
         return false;
     }
+}
+
+Level.prototype.atingiuPredio = function (){
+    for (var i = 0; i < this.predios.length; i++) {
+        var predio = this.predios[i];
+
+        for (var j = 0; j < this.sprites.length; j++) {
+            var meteoro = this.sprites[j];
+            
+            if(predio.colidiu(meteoro)){
+                this.predios.splice(i, 1);
+                return true;
+            }
+        }
+    }
+    return false;
 }
