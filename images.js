@@ -11,7 +11,7 @@ ImageLoader.prototype.load = function (key, imgURL) {
 
 ImageLoader.prototype.inicializar = function (){
     this.load("nave", "images/nave.png");
-    this.load("predio", "images/predio1.jpg");
+    this.load("predio", "images/predio.png");
     this.load("inimigo", "images/inimigo.png");
     // this.load("predio", "images/" + this.predios[parseInt(Math.random() * 5)]);
     this.load("tiro", "images/tiro.png");

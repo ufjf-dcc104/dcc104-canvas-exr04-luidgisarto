@@ -1,5 +1,5 @@
 function Level() {
-    this.inimigos = 8;
+    this.inimigos = 15;
     this.sprites = [];
     this.predios = [];
     this.tiros = [];
@@ -8,8 +8,12 @@ function Level() {
 Level.prototype.inicializar = function () {
     for (var i = 0; i < this.inimigos; i++) {
         var inimigo = new Sprite();
-        inimigo.x = 20 + parseInt(Math.floor(Math.random() * 450));
-        inimigo.y = 20 + parseInt(Math.floor(Math.random() * 150));
+        inimigo.x = Math.floor(Math.random() * 700) + 50;
+        inimigo.y = Math.floor(Math.random() * 150) + 50;
+        // inimigo.angulo = 500;
+        // inimigo.va = 80;       
+        inimigo.vx = 0;
+        inimigo.vy = 100;
         inimigo.color = "red";
         inimigo.width = 100;
         inimigo.height = 70;
@@ -18,15 +22,12 @@ Level.prototype.inicializar = function () {
     }
 }
 
-Level.prototype.inicializarPredios = function(total, posicao) {
+Level.prototype.inicializarPredios = function (total, posicao) {
     for (var i = 0; i < total; i++) {
         var predio = new Sprite();
-        var posicaoAtual = parseInt(70 + 100*i);
-        if(posicaoAtual > 200){
-            predio.x = posicaoAtual + 150;
-        }
-        else{
-            predio.x = posicaoAtual;
+        predio.x = 50 + 200*i + 20;
+        if(predio.x > 270){
+            predio.x += 60;
         }
         predio.y = 430;
         predio.width = 120;
@@ -37,14 +38,18 @@ Level.prototype.inicializarPredios = function(total, posicao) {
 }
 
 Level.prototype.atirar = function (alvo) {
+    if(alvo.cooldown > 0){
+        return;
+    }
     var tiro = new Sprite();
     tiro.x = alvo.x;
     tiro.y = alvo.y;
-    tiro.vy = 100;
-    // tiro.angulo = alvo.angulo;
-    tiro.width = 15;
-    tiro.height = 15;
+    tiro.vy = -300;
+    // tiro.angulo = alvo.x;
+    tiro.width = 8;
+    tiro.height = 8;
     tiro.imgkey = "tiro";
+    alvo.cooldown = 0.2;
     this.tiros.push(tiro);
 }
 
@@ -65,36 +70,43 @@ Level.prototype.desenhar = function (ctx) {
 
 Level.prototype.mover = function (dt) {
     for (var i = 0; i < this.sprites.length; i++) {
-        this.sprites[i].mover(dt);
+        var meteoro = this.sprites[i];
+        if (parseInt(meteoro.y) > 500) {
+            this.sprites.splice(this.sprites.indexOf(meteoro), 1);
+        }
+        else {
+            meteoro.mover(dt);
+        }
     }
 
     for (var i = 0; i < this.tiros.length; i++) {
         this.tiros[i].mover(dt);
-
     }
 }
 
 
 Level.prototype.colidiuCom = function (alvo, resolveColisao) {
     for (var i = 0; i < this.sprites.length; i++) {
-      if(this.sprites[i].colidiu(alvo)){
-        resolveColisao(this.sprites[i], alvo);
-      }
+        if (this.sprites[i].colidiu(alvo)) {
+            resolveColisao(this.sprites[i], alvo);
+        }
     }
 };
 
 Level.prototype.atingido = function () {
     for (var i = this.tiros.length - 1; i >= 0; i--) {
-        this.colidiuCom(this.tiros[i],
-            (
-                function (that) {
-                    return function (alvo) {
-                        alvo.color = "green";
-                        that.tiros.splice(i, 1);
-                        x = that.sprites.indexOf(alvo);
-                        that.sprites.splice(x, 1);
-                    }
-                }
-            )(this));
+        var tiro = this.tiros[i];
+
+        for (var j = 0; j < this.sprites.length; j++) {
+            var meteoro = this.sprites[j];
+
+            if (meteoro.colidiu(tiro)) {
+                this.tiros.splice(i, 1);
+                this.sprites.splice(j, 1);
+                return true;
+            }
+        }
+
+        return false;
     }
 }

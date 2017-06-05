@@ -5,41 +5,46 @@ function Sprite(x, y, w, h, cor) {
     this.height = h;
     this.vx = 0;
     this.vy = 0;
-    this.angulo = -90;
-    this.va = 0;
+    // this.angulo = -90;
+    // this.va = 0;
+    this.cooldown = 0;
 }
 
 Sprite.prototype.desenhar = function (ctx, img) {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    ctx.rotate(this.angulo * 2 * Math.PI / 360);
-    ctx.rotate(Math.PI / 2);
     ctx.fillStyle = this.color;
-    ctx.drawImage(img, -this.width / 2, -this.height / 2, this.width, this.height);
-    if (this.debug) {
-        ctx.strokeStyle = "grey";
-        ctx.strokeRect(-this.width / 2, -this.height / 2, this.width, this.height);
-    }
-    ctx.restore();
+    ctx.drawImage(img, this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
+    ctx.strokeStyle = "white";
+
+
+    // ctx.save();
+    // ctx.translate(this.x, this.y);
+    // ctx.rotate(this.angulo * 2 * Math.PI / 360);
+    // ctx.rotate(Math.PI / 2);
+    // ctx.fillStyle = this.color;
+    // ctx.drawImage(img, this.x-this.width/2, this.y-this.height/2, this.width, this.height);
+    // ctx.restore();
 };
 
 Sprite.prototype.mover = function (dt) {
-    this.angulo = this.angulo + this.va * dt;
-    this.vx = Math.cos(this.angulo);
-    this.vy = Math.sin(this.angulo);
-    this.x = parseInt(this.x + this.vx * dt);
-    this.y = parseInt(this.y + this.vy * dt);
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+    if (this.cooldown > 0) {
+        this.cooldown -= dt;
+    } else {
+        this.cooldown = 0;
+    }
+    // this.angulo = this.angulo + this.va * dt;
+    // this.vx = Math.floor(Math.sin(this.angulo) * Math.PI/360);
+    // this.vy = Math.floor(Math.cos(this.angulo) * Math.PI/360);
+    // this.x = Math.floor(this.x + this.vx * dt);
+    // this.y = Math.floor(this.y + this.vy * dt);
 };
 
 Sprite.prototype.colidiu = function (alvo) {
-    if (this.x + this.width < alvo.x)
-        return false;
-    if (this.x > alvo.x + this.width)
-        return false;
-    if (this.y + this.height < alvo.y)
-        return false;
-    if (this.y > alvo.y + this.height)
-        return false;
+    if (this.x + this.width / 2 < alvo.x - alvo.width / 2) return false;
+    if (this.x - this.width / 2 > alvo.x + alvo.width / 2) return false;
+    if (this.y + this.height / 2 < alvo.y - alvo.height / 2) return false;
+    if (this.y - this.height / 2 > alvo.y + alvo.height / 2) return false;
     return true;
 };
 
