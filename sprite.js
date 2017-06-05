@@ -5,8 +5,8 @@ function Sprite(x, y, w, h, cor) {
     this.height = h;
     this.vx = 0;
     this.vy = 0;
-    // this.angulo = -90;
-    // this.va = 0;
+    this.angulo = -90;
+    this.va = 0;
     this.cooldown = 0;
 }
 
@@ -24,6 +24,26 @@ Sprite.prototype.desenhar = function (ctx, img) {
     // ctx.drawImage(img, this.x-this.width/2, this.y-this.height/2, this.width, this.height);
     // ctx.restore();
 };
+
+Sprite.prototype.desenharNave = function (ctx, img) {
+    ctx.drawImage(img, this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angulo + 2* Math.PI /360);
+    ctx.beginPath();
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+}
+
+Sprite.prototype.moverNave = function (dt) {
+    this.angulo = this.angulo * dt;
+    this.vx = Math.cos(this.angulo) * this.va;
+    this.vy = Math.sin(this.angulo) * this.va;
+    this.x = this.x + this.vx*dt;
+    this.y = this.y + this.vy*dt;
+}
 
 Sprite.prototype.mover = function (dt) {
     this.x += this.vx * dt;
