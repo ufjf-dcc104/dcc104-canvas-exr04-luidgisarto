@@ -5,7 +5,7 @@ function Sprite(x, y, w, h, cor) {
     this.height = h;
     this.vx = 0;
     this.vy = 0;
-    this.angulo = -90;
+    this.angulo = 0;
     this.va = 0;
     this.cooldown = 0;
 }
@@ -26,23 +26,32 @@ Sprite.prototype.desenhar = function (ctx, img) {
 };
 
 Sprite.prototype.desenharNave = function (ctx, img) {
-    ctx.drawImage(img, this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
     ctx.save();
     ctx.translate(this.x, this.y);
-    ctx.rotate(this.angulo + 2* Math.PI /360);
+    ctx.rotate(this.angulo * 2 * Math.PI / 360);
+    ctx.fillStyle = "white";
+    ctx.drawImage(img, - this.width / 2, -this.height / 2, this.width, this.height);
     ctx.beginPath();
+    // ctx.moveTo(-this.width / 2, -this.height / 2);
+    // ctx.lineTo(-this.width / 2, +this.height / 2);
+    // ctx.lineTo(+this.width / 2, 0);
+     ctx.strokeRect(-this.width/2, -this.height/2, this.width, this.height);
     ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
     ctx.restore();
 }
 
 Sprite.prototype.moverNave = function (dt) {
-    this.angulo = this.angulo * dt;
-    this.vx = Math.cos(this.angulo) * this.va;
-    this.vy = Math.sin(this.angulo) * this.va;
-    this.x = this.x + this.vx*dt;
-    this.y = this.y + this.vy*dt;
+    this.angulo = parseInt(this.angulo + this.va * dt);
+    // console.log(parseInt(this.angulo));
+    this.vx = this.vx * Math.cos(Math.PI * this.angulo / 180);
+    this.vy = this.vy * Math.sin(Math.PI * this.angulo / 180);
+    this.x = this.x + this.vx * dt;
+    this.y = this.y + this.vy * dt;
+    if (this.cooldown > 0) {
+        this.cooldown -= dt;
+    } else {
+        this.cooldown = 0;
+    }
 }
 
 Sprite.prototype.mover = function (dt) {

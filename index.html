@@ -29,6 +29,7 @@
     level.imageLib = il;
     level.inicializar();
     level.inicializarPredios();
+    habilitarControles();
     desenha();
 
     function desenha() {
@@ -37,9 +38,7 @@
         requestAnimationFrame(desenha);
         inicializar(ctx);
         base.moverNave(dt);
-        base.angulo = -90;
         base.desenharNave(ctx, il.images["nave"]);
-        habilitarControles();
         level.mover(dt);
         level.desenhar(ctx);
 
@@ -53,7 +52,7 @@
     }
 
     function existePredios() {
-        if(level.predios.length === 0){
+        if (level.predios.length === 0) {
             level.inimigos = 0;
             ctx.font = "30px Arial";
             ctx.fillStyle = "white";
@@ -70,7 +69,7 @@
     }
 
     function obterbaseInicial() {
-        return new Sprite(canvas.width / 2, canvas.height - 50, 70, 70, "blue");
+        return new Sprite(400, 430, 70, 70, "blue");
         // return new Sprite(150, 270, 70, 70, "blue");
     }
 
@@ -83,11 +82,14 @@
                     level.atirar(base);
                     break;
                 case 65: //A
-                    base.angulo = 10;                
-                    base.va = -500;
+                    base.va = -200;
+                    base.vx = 0;
+                    base.vy = 0;                    
                     break;
                 case 68: //D
-                    base.va = 500;
+                    base.va = 200;
+                    base.vx = 0;
+                    base.vy = 0;
                     break;
                 default:
             }
@@ -96,10 +98,10 @@
         addEventListener("keyup", function (e) {
             switch (e.keyCode) {
                 case 65:
-                    base.va = -500;
+                    base.va = 0;
                     break;
                 case 68:
-                    base.va = 500;
+                    base.va = 0;
                     break;
                 default:
 

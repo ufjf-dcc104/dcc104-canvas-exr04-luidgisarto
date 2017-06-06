@@ -46,7 +46,10 @@ Level.prototype.atirar = function (alvo) {
     tiro.x = alvo.x;
     tiro.y = alvo.y;
     tiro.vy = -300;
-    // tiro.angulo = alvo.x;
+    tiro.angulo = alvo.x;
+    console.log(alvo.x);
+    console.log(tiro.angulo);
+    tiro.va = 100;
     tiro.width = 8;
     tiro.height = 8;
     tiro.imgkey = "tiro";
@@ -60,7 +63,7 @@ Level.prototype.desenhar = function (ctx) {
     }
 
     for (var i = 0; i < this.tiros.length; i++) {
-        this.tiros[i].desenhar(ctx, this.imageLib.images[this.tiros[i].imgkey]);
+        this.tiros[i].desenharNave(ctx, this.imageLib.images[this.tiros[i].imgkey]);
     }
 
     for (var i = 0; i < this.predios.length; i++) {
