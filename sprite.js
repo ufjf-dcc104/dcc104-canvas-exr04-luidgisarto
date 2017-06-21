@@ -35,7 +35,7 @@ Sprite.prototype.desenharNave = function (ctx, img) {
     // ctx.moveTo(-this.width / 2, -this.height / 2);
     // ctx.lineTo(-this.width / 2, +this.height / 2);
     // ctx.lineTo(+this.width / 2, 0);
-     ctx.strokeRect(-this.width/2, -this.height/2, this.width, this.height);
+    //  ctx.strokeRect(-this.width/2, -this.height/2, this.width, this.height);
     ctx.closePath();
     ctx.restore();
 }

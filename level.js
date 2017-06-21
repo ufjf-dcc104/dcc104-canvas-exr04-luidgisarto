@@ -14,7 +14,7 @@ Level.prototype.inicializar = function () {
         // inimigo.angulo = 500;
         // inimigo.va = 80;       
         inimigo.vx = 0;
-        inimigo.vy = 500;
+        inimigo.vy = 100;
         inimigo.color = "red";
         inimigo.width = 100;
         inimigo.height = 70;
@@ -39,23 +39,46 @@ Level.prototype.inicializarPredios = function () {
 }
 
 Level.prototype.atirar = function (alvo) {
-    if(alvo.cooldown > 0){
+    var baseSpeed = -300;
+    var speedX = -Math.sin(alvo.angulo * 2 * Math.PI / 360);
+    var speedY = Math.cos(alvo.angulo * 2 * Math.PI / 360);
+
+    if (alvo.cooldown > 0) {
         return;
     }
+
     var tiro = new Sprite();
     tiro.x = alvo.x;
     tiro.y = alvo.y;
-    tiro.vy = -300;
-    tiro.angulo = alvo.x;
-    console.log(alvo.x);
-    console.log(tiro.angulo);
+    tiro.vy = speedY * baseSpeed;
+    tiro.vx = speedX * baseSpeed;
+    tiro.angulo = alvo.angulo;
     tiro.va = 100;
-    tiro.width = 8;
-    tiro.height = 8;
+    tiro.width = 10;
+    tiro.height = 10;
     tiro.imgkey = "tiro";
     alvo.cooldown = 0.2;
     this.tiros.push(tiro);
 }
+
+// Level.prototype.atirar = function (alvo) {
+//     if(alvo.cooldown > 0){
+//         return;
+//     }
+//     var tiro = new Sprite();
+//     tiro.x = alvo.x;
+//     tiro.y = alvo.y;
+//     tiro.vy = -300;
+//     tiro.angulo = alvo.x;
+//     console.log(alvo.x);
+//     console.log(tiro.angulo);
+//     tiro.va = 100;
+//     tiro.width = 8;
+//     tiro.height = 8;
+//     tiro.imgkey = "tiro";
+//     alvo.cooldown = 0.2;
+//     this.tiros.push(tiro);
+// }
 
 Level.prototype.desenhar = function (ctx) {
     for (var i = 0; i < this.sprites.length; i++) {
